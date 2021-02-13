@@ -1,0 +1,25 @@
+/* Theming */
+:root { 
+  --primary-color: #957D7A;
+  --secondary-color: #D28F6E; 
+  --tertiary-color: #937481;
+  --font-color: #EFF0EB; 
+  --bg-color: #293D4F; 
+}
+
+/* Helpers */
+.full-h { height: 100% }
+.full-w { width: 100% }
+
+/* Global */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-color);
+  color: var(--font-color);
+  font-family: 'Verdana';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--font-color); }

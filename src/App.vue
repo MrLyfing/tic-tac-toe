@@ -1,19 +1,19 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + Vit" />
+<div class="app">
+  <div class="content">
+    <router-view />
+  </div>
+</div>
 </template>
 
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
+<style scoped>
+.app {
+  display: flex;
+  justify-content: center;
+}
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.content {
+  min-height: 100vh;
+  width: 500px;
 }
 </style>
