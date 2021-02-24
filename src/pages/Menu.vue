@@ -39,7 +39,7 @@ export default {
   .logo .X { color: var(--primary-color) }
   .logo .O { color: var(--secondary-color) }
 
-  .actions { 
+  .actions {
     display: flex;
     flex-direction: column;
     margin-top: 100px;

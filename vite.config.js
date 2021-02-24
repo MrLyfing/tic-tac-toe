@@ -1,4 +1,5 @@
 import vue from '@vitejs/plugin-vue'
+import viteESLint from '@ehutch79/vite-eslint'
 import path from 'path'
 
 /**
@@ -6,7 +7,10 @@ import path from 'path'
  * @type {import('vite').UserConfig}
  */
 export default {
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    viteESLint()
+  ],
   alias: {
     '/@': path.resolve(__dirname, './src')
   }
