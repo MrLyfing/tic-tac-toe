@@ -10,8 +10,14 @@
 /* Helpers */
 .full-h { height: 100% }
 .full-w { width: 100% }
+.X { color: var(--primary-color) }
+.O { color: var(--secondary-color) }
 
 /* Global */
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
 html, body {
   margin: 0;
   padding: 0;
