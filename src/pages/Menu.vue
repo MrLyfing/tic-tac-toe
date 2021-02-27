@@ -1,29 +1,30 @@
 <template>
-  <div class="menu full-h">
+  <div class="container full-h">
     <div class="logo">
-      <span class="X">X</span>
-      <span class="O">O</span>
+      <span class="p-color-font">X</span>
+      <span class="s-color-font">O</span>
     </div>
 
-    <div class="actions">
-      <router-link class="btn-game" to="/pick">one player</router-link>
-      <router-link class="btn-game" to="/pick">two players</router-link>
-      <router-link class="btn-game" to="/pick">online</router-link>
-      <button-settings class="btn-settings"/>
+    <div class="menu">
+      <btn class="menu__game" to="/pick">one player</btn>
+      <btn class="menu__game" to="/pick">two players</btn>
+      <btn class="menu__game" to="/pick">online</btn>
+      <btn-settings class="menu__settings"/>
     </div>
   </div>
 </template>
 
 <script>
-import ButtonSettings from '/@/components/ButtonSettings.vue'
+import Btn from '/@/components/Btn.vue'
+import BtnSettings from '/@/components/BtnSettings.vue'
 
 export default {
-  components: { ButtonSettings }
+  components: { Btn, BtnSettings }
 }
 </script>
 
 <style lang="postcss" scoped>
-  .menu {
+  .container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -36,25 +37,15 @@ export default {
     letter-spacing: 5px;
   }
 
-  .actions {
+  .menu {
     display: flex;
     flex-direction: column;
     margin-top: 100px;
     text-align: center;
-  }
-
-  .btn-game {
-    margin-top: 20px;
-    padding: 20px 35px;
-    border: 3px var(--font-color) solid;
-    border-radius: 10px;
-    font-weight: 600;
-    text-decoration: none;
-    text-transform: uppercase;
-  }
-
-  .btn-settings {
-    margin: 0 auto;
-    margin-top: 30px;
+    &__game { margin-top: 20px; }
+    &__settings {
+      margin: 0 auto;
+      margin-top: 30px;
+    }
   }
 </style>

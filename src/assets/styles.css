@@ -10,8 +10,8 @@
 /* Helpers */
 .full-h { height: 100% }
 .full-w { width: 100% }
-.X { color: var(--primary-color) }
-.O { color: var(--secondary-color) }
+.p-color-font { color: var(--primary-color) }
+.s-color-font { color: var(--secondary-color) }
 
 /* Global */
 *, *:before, *:after {
@@ -28,4 +28,3 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-a { color: var(--font-color); }

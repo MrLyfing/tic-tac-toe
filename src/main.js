@@ -4,11 +4,11 @@ import { createStore } from 'vuex'
 
 import App from './App.vue'
 import Menu from './pages/Menu.vue'
-import PickSide from './pages/PickSide.vue'
+import PickTeam from './pages/PickTeam.vue'
 
 const routes = [
   { path: '/', component: Menu },
-  { path: '/pick', component: PickSide }
+  { path: '/pick', component: PickTeam }
 ]
 
 const router = createRouter({

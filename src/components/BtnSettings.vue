@@ -4,23 +4,19 @@
   </router-link>
 </template>
 
-<script>
-export default {
-
-}
-</script>
-
 <style scoped>
   .btn-settings {
-    height: 25px;
-    width: 25px;
-    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
     border: 2px var(--font-color) solid;
-    border-radius: 100%;
+    border-radius: 50%;
   }
   svg {
     fill: var(--font-color);
-    height: inherit;
-    width: inherit;
+    height: 25px;
+    width: 25px;
   }
 </style>
