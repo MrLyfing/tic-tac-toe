@@ -22,7 +22,7 @@
 
     </div>
 
-    <btn class="btn-continue" to="/play">Continue</btn>
+    <btn class="btn-continue" size="small" to="/play">Continue</btn>
   </div>
 </template>
 
@@ -32,7 +32,7 @@ import Btn from '/@/components/Btn.vue'
 
 export default {
   components: { Btn },
-  setup (props) {
+  setup () {
     const team = ref('x')
     return { team }
   }
@@ -56,6 +56,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    cursor: pointer;
   }
   &__logo {
     font-size: 100px;
