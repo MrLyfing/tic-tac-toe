@@ -1,7 +1,9 @@
 module.exports = {
   extends: [
-    'plugin:vue/vue3-essential',
-    'standard'
+    'standard',
+    'plugin:vue/vue3-recommended',
+    'plugin:prettier-vue/recommended',
+    'prettier'
   ],
   rules: {
     'import/no-absolute-path': 'off'

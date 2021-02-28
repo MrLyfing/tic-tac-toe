@@ -1,9 +1,9 @@
 <template>
-<div class="app">
-  <div class="content">
-    <router-view />
+  <div class="app">
+    <div class="content">
+      <router-view />
+    </div>
   </div>
-</div>
 </template>
 
 <style scoped>

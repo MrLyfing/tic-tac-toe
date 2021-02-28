@@ -1,21 +1,12 @@
 const ROUTE = {
-  MENU: {
-    PATH: '/',
-    NAME: 'menu'
-  },
-  PICK_TEAM: {
-    PATH: '/pick',
-    NAME: 'pick-team'
-  },
-  GAME: {
-    PATH: '/game',
-    NAME: 'game'
-  }
+  MENU: { PATH: '/' },
+  PICK_TEAM: { PATH: '/pick' },
+  GAME: { PATH: '/game' },
 }
 
 const TEAM = {
   X: 'X',
-  Y: 'Y'
+  Y: 'Y',
 }
 
 export { ROUTE, TEAM }

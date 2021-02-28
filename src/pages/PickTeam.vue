@@ -4,43 +4,42 @@
     <h3 class="header">Pick your team</h3>
 
     <div class="selection full-w">
-      <div class="selection__team" @click="team = 'x'">
+      <div class="selection__team" @click="selectedTeam = TEAM.X">
         <div class="selection__logo p-color-font">X</div>
         <label class="radio">
-          <input class="radio__input" type="radio" value="x" v-model="team">
+          <input v-model="selectedTeam" class="radio__input" type="radio" :value="TEAM.X" />
           <span class="radio__btn" />
         </label>
       </div>
 
-      <div class="selection__team" @click="team = 'o'">
+      <div class="selection__team" @click="selectedTeam = TEAM.O">
         <div class="selection__logo s-color-font">O</div>
         <label class="radio">
-          <input class="radio__input" type="radio" value="o" v-model="team">
+          <input v-model="selectedTeam" class="radio__input" type="radio" :value="TEAM.O" />
           <span class="radio__btn" />
         </label>
       </div>
-
     </div>
 
-    <btn class="btn-continue" size="small" to="/play">Continue</btn>
+    <btn class="btn-continue" size="small" :to="ROUTE.GAME.PATH">Continue</btn>
   </div>
 </template>
 
 <script>
+import { TEAM, ROUTE } from '/@/constants'
 import { ref } from 'vue'
 import Btn from '/@/components/Btn.vue'
 
 export default {
   components: { Btn },
-  setup () {
-    const team = ref('x')
-    return { team }
-  }
+  setup() {
+    const selectedTeam = ref(TEAM.X)
+    return { selectedTeam, TEAM, ROUTE }
+  },
 }
 </script>
 
 <style lang="postcss" scoped>
-
 .container {
   display: flex;
   flex-direction: column;
@@ -48,7 +47,9 @@ export default {
   align-items: center;
 }
 
-.header { margin-bottom: 70px; }
+.header {
+  margin-bottom: 70px;
+}
 .selection {
   display: flex;
   justify-content: space-around;
@@ -71,7 +72,9 @@ export default {
   margin-top: 15px;
   cursor: pointer;
 
-  &__input { display: none; }
+  &__input {
+    display: none;
+  }
   &__input:checked + &__btn {
     background: radial-gradient(var(--font-color) 45%, var(--bg-color) 51%);
     opacity: 1;

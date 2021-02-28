@@ -6,12 +6,12 @@
 <script>
 export default {
   props: {
-    to: String,
+    to: { type: String, default: '' },
     size: {
       type: String,
-      default: 'regular'
-    }
-  }
+      default: 'regular',
+    },
+  },
 }
 </script>
 
