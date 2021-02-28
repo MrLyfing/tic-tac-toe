@@ -4,7 +4,10 @@
     <h3 class="header">Pick your team</h3>
 
     <div class="selection full-w">
-      <div class="selection__team" @click="selectedTeam = TEAM.X">
+      <div
+        :class="['selection__team', { 'selection--enable': selectedTeam === TEAM.X }]"
+        @click="selectedTeam = TEAM.X"
+      >
         <div class="selection__logo p-color-font">X</div>
         <label class="radio">
           <input v-model="selectedTeam" class="radio__input" type="radio" :value="TEAM.X" />
@@ -12,7 +15,10 @@
         </label>
       </div>
 
-      <div class="selection__team" @click="selectedTeam = TEAM.O">
+      <div
+        :class="['selection__team', { 'selection--enable': selectedTeam === TEAM.O }]"
+        @click="selectedTeam = TEAM.O"
+      >
         <div class="selection__logo s-color-font">O</div>
         <label class="radio">
           <input v-model="selectedTeam" class="radio__input" type="radio" :value="TEAM.O" />
@@ -57,18 +63,22 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
+    opacity: 0.3;
     cursor: pointer;
   }
+  &--enable {
+    opacity: 1;
+  }
   &__logo {
-    font-size: 100px;
+    font-size: 130px;
   }
 }
 
 .radio {
   display: block;
   position: relative;
-  width: 28px;
-  height: 28px;
+  width: 25px;
+  height: 25px;
   margin-top: 15px;
   cursor: pointer;
 
@@ -86,9 +96,8 @@ export default {
     left: 0;
     height: inherit;
     width: inherit;
-    opacity: 0.6;
     border-radius: 50%;
-    border: 4px var(--font-color) solid;
+    border: 3px var(--font-color) solid;
   }
 }
 
