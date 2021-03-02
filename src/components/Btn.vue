@@ -9,9 +9,9 @@ export default {
     to: { type: String, default: '' },
     size: {
       type: String,
-      default: 'regular',
-    },
-  },
+      default: 'regular'
+    }
+  }
 }
 </script>
 

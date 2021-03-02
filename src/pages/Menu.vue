@@ -21,7 +21,7 @@ import BtnSettings from '/@/components/BtnSettings.vue'
 
 export default {
   components: { Btn, BtnSettings },
-  data: () => ({ ROUTE }),
+  data: () => ({ ROUTE })
 }
 </script>
 
@@ -42,7 +42,7 @@ export default {
 .menu {
   display: flex;
   flex-direction: column;
-  margin-top: 100px;
+  margin-top: 80px;
   text-align: center;
   &__game {
     margin-top: 20px;

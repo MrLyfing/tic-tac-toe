@@ -11,16 +11,16 @@ import Game from './pages/Game.vue'
 const routes = [
   { path: ROUTE.MENU.PATH, component: Menu },
   { path: ROUTE.PICK_TEAM.PATH, component: PickTeam },
-  { path: ROUTE.GAME.PATH, component: Game },
+  { path: ROUTE.GAME.PATH, component: Game }
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes,
+  routes
 })
 
 const store = createStore({
-  state() {},
+  state() {}
 })
 
 const app = createApp(App)

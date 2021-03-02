@@ -41,7 +41,7 @@ export default {
   setup() {
     const selectedTeam = ref(TEAM.X)
     return { selectedTeam, TEAM, ROUTE }
-  },
+  }
 }
 </script>
 
