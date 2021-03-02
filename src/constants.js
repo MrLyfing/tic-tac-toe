@@ -6,7 +6,7 @@ const ROUTE = {
 
 const TEAM = {
   X: 'X',
-  Y: 'Y'
+  O: 'O'
 }
 
 export { ROUTE, TEAM }
