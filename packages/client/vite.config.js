@@ -7,11 +7,10 @@ import path from 'path'
  * @type {import('vite').UserConfig}
  */
 export default {
-  plugins: [
-    vue(),
-    viteESLint()
-  ],
-  alias: {
-    '/@': path.resolve(__dirname, './src')
+  plugins: [vue(), viteESLint()],
+  resolve: {
+    alias: {
+      '/@': path.resolve(__dirname, './src')
+    }
   }
 }

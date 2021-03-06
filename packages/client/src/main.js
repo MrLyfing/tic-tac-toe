@@ -8,6 +8,10 @@ import Menu from './pages/Menu.vue'
 import PickTeam from './pages/PickTeam.vue'
 import Game from './pages/Game.vue'
 
+import { hello } from '@tic-tac-toe/common'
+
+hello()
+
 const routes = [
   { path: ROUTE.MENU.PATH, component: Menu },
   { path: ROUTE.PICK_TEAM.PATH, component: PickTeam },
