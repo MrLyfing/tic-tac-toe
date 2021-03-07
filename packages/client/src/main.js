@@ -10,7 +10,7 @@ import Menu from './pages/Menu.vue'
 import PickTeam from './pages/PickTeam.vue'
 import Game from './pages/Game.vue'
 
-const socket = io('wss://localhost:8080', {
+const socket = io('ws://localhost:8080', {
   transports: ['websocket']
 })
 

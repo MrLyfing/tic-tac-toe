@@ -48,7 +48,7 @@ export default {
       else return STATE.PLAY
     },
     draw() {
-      return this.turnCount === MAX_MOVE_COUNT && !this.rowsWinner && !this.columnsWinner && !this.diagonalsWinner
+      return this.moveCount === MAX_MOVE_COUNT && !this.rowsWinner && !this.columnsWinner && !this.diagonalsWinner
     },
     winner() {
       return this.rowsWinner || this.columnsWinner || this.diagonalsWinner

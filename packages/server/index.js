@@ -10,6 +10,7 @@ const io = new Server(httpServer, {
 
 io.on('connection', socket => {
   console.log('connected!')
+  socket.emit('bien joué', 'haha')
 })
 
 httpServer.listen(8080, () => {
