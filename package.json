@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "lint": "eslint --ext .js,.vue packages",
-    "dev:client": "yarn workspace client dev"
+    "dev:client": "yarn workspace client dev",
+    "dev:server": "yarn workspace server dev"
   },
   "devDependencies": {
     "eslint": "^7.21.0",

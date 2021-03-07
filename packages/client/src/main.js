@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { createStore } from 'vuex'
+import { io } from 'socket.io-client'
+
 import { ROUTE } from './constants'
 
 import App from './App.vue'
@@ -8,9 +10,17 @@ import Menu from './pages/Menu.vue'
 import PickTeam from './pages/PickTeam.vue'
 import Game from './pages/Game.vue'
 
-import { hello } from '@tic-tac-toe/common'
+const socket = io('wss://localhost:8080', {
+  transports: ['websocket']
+})
 
-hello()
+socket.onAny((event, ...args) => {
+  console.log(event, args)
+})
+socket.on('connect_error', err => {
+  console.log(err)
+})
+socket.emit('hello')
 
 const routes = [
   { path: ROUTE.MENU.PATH, component: Menu },

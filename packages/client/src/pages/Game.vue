@@ -32,14 +32,14 @@ const TEAM_TO_STATE_WIN = {
   [TEAM.O]: STATE.WIN_O
 }
 
-const MAX_TURNS = 9
+const MAX_MOVE_COUNT = 9
 
 export default {
   data: () => ({
     CELL,
     grid: [...Array(3)].map(() => [CELL.EMPTY, CELL.EMPTY, CELL.EMPTY]),
     currentTurn: TEAM.X,
-    turnCount: 0
+    moveCount: 0
   }),
   computed: {
     gameState() {
@@ -48,7 +48,7 @@ export default {
       else return STATE.PLAY
     },
     draw() {
-      return this.turnCount === MAX_TURNS && !this.rowsWinner && !this.columnsWinner && !this.diagonalsWinner
+      return this.turnCount === MAX_MOVE_COUNT && !this.rowsWinner && !this.columnsWinner && !this.diagonalsWinner
     },
     winner() {
       return this.rowsWinner || this.columnsWinner || this.diagonalsWinner
@@ -87,7 +87,7 @@ export default {
   mounted() {},
   methods: {
     playCell(team, row, column) {
-      this.turnCount++
+      this.moveCount++
       if (this.grid[row][column] !== CELL.EMPTY) return
       this.grid[row].splice(column, 1, team)
       this.currentTurn = team === TEAM.X ? TEAM.O : TEAM.X
