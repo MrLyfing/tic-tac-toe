@@ -20,7 +20,9 @@ socket.onAny((event, ...args) => {
 socket.on('connect_error', err => {
   console.log(err)
 })
-socket.emit('hello')
+socket.emit('game:create', { p1Name: 'lyfing', p1Team: 'X' }, res => {
+  console.log(res)
+})
 
 const routes = [
   { path: ROUTE.MENU.PATH, component: Menu },

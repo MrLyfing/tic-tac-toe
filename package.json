@@ -11,9 +11,11 @@
   "scripts": {
     "lint": "eslint --ext .js,.vue packages",
     "dev:client": "yarn workspace client dev",
-    "dev:server": "yarn workspace server dev"
+    "dev:server": "yarn workspace server dev",
+    "dev": "concurrently \"yarn dev:client\" \"yarn dev:server\""
   },
   "devDependencies": {
+    "concurrently": "^6.0.0",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-config-standard": "^16.0.2",

@@ -6,8 +6,8 @@
     </div>
 
     <div class="menu">
-      <btn class="menu__game" :to="ROUTE.PICK_TEAM.PATH">one player</btn>
-      <btn class="menu__game" :to="ROUTE.PICK_TEAM.PATH">two players</btn>
+      <btn class="menu__game" :to="ROUTE.PICK_TEAM.PATH">single player</btn>
+      <btn class="menu__game" :to="ROUTE.PICK_TEAM.PATH">multiplayer</btn>
       <btn class="menu__game" :to="ROUTE.PICK_TEAM.PATH">online</btn>
       <btn-settings class="menu__settings" />
     </div>
