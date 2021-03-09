@@ -1,6 +1,6 @@
 import { createServer } from 'http'
 import { Server } from 'socket.io'
-import { GAME_MODE, TEAM, GAME_STATUS } from '@tic-tac-toe/common'
+import { GAME_MODE, TEAM, GAME_STATUS, EVENT } from '@tic-tac-toe/common'
 
 const getOppositeTeam = team => (team === TEAM.X ? TEAM.Y : TEAM.X)
 
@@ -35,12 +35,20 @@ class Game {
   }
 }
 
-class Player {
-  constructor(name, team) {
+class User {
+  constructor(name) {
     this.name = name
+  }
+}
+
+class Player extends User {
+  constructor(name, team) {
+    super(name)
     this.team = team
   }
 }
+
+class Spectator extends User {}
 
 function socketOnEvents(socket, names, fn) {
   names.forEach(name => {
@@ -57,28 +65,28 @@ const io = new Server(httpServer, {
 })
 
 io.on('connection', socket => {
-  socketOnEvents(socket, ['game:createSingle', 'game:createOnline'], (payload, cb) => {
+  socketOnEvents(socket, [EVENT.CREATE_SINGLE, EVENT.CREATE_ONLINE], (payload, cb) => {
     const { gameMode, p1Name, p1Team } = payload
     if (!gameMode || !p1Name || !p1Team) {
-      return cb({ status: 'ERROR', message: 'Payload incorrect' })
+      return cb({ success: false, message: 'Payload incorrect' })
     }
     if (![GAME_MODE.SINGLE_PLAYER, GAME_MODE.ONLINE].includes(gameMode)) {
-      return cb({ status: 'ERROR', message: 'Incorrect game mode' })
+      return cb({ success: false, message: 'Incorrect game mode' })
     }
     const p1 = new Player(p1Name, p1Team)
     const newGame = new Game(p1, gameMode)
     games.push(newGame)
     socket.join(newGame.room)
-    cb({ status: 'OK', game: newGame.getGameState() })
+    cb({ success: true, game: newGame.getGameState() })
   })
 
-  socket.on('game:createMulti', (payload, cb) => {
+  socket.on(EVENT.CREATE_MULTIPLAYER, (payload, cb) => {
     const { gameMode, p1Name, p1Team, p2Name } = payload
     if (!gameMode || !p1Name || !p1Team || !p2Name) {
-      return cb({ status: 'ERROR', message: 'Payload incorrect' })
+      return cb({ success: false, message: 'Payload incorrect' })
     }
     if (gameMode !== GAME_MODE.MULTIPLAYER) {
-      return cb({ status: 'ERROR', message: 'Incorrect game mode' })
+      return cb({ success: false, message: 'Incorrect game mode' })
     }
     const p1 = new Player(p1Name, p1Team)
     const p2 = new Player(p2Name, getOppositeTeam(p1Team))
@@ -86,31 +94,38 @@ io.on('connection', socket => {
     newGame.setP2(p2)
     games.push(newGame)
     socket.join(newGame.room)
-    cb({ status: 'OK', game: newGame.getGameState() })
+    cb({ success: true, game: newGame.getGameState() })
   })
 
-  socket.on('game:joinOnline', (payload, cb) => {
-    const { room, p2Name } = payload
-    if (!room || !p2Name) {
-      return cb({ status: 'ERROR', message: 'Payload incorrect' })
+  socket.on(EVENT.JOIN_ONLINE, (payload, cb) => {
+    const { room, name } = payload
+    if (!room || !name) {
+      return cb({ success: false, message: 'Payload incorrect' })
     }
     const game = games.find(g => g.room === room)
-    if (!game) return cb({ status: 'ERROR', message: 'Game not found' })
-    if (game.mode !== GAME_MODE.ONLINE) return cb({ status: 'ERROR', message: 'This is not an online game' })
-    // TODO: Join as spectator if game in progress...
-    this.setP2(p2Name, getOppositeTeam(game.p1.team))
-    socket.join(game.room)
+    if (!game) return cb({ success: false, message: 'Game not found' })
+    if (game.mode !== GAME_MODE.ONLINE) {
+      return cb({ success: false, message: 'This is not an online game' })
+    }
 
-    io.in(game.room).emit('game:update', game.getGameState())
-    cb({ status: 'OK', game: game.getGameState() })
+    if (game.p2 === null) {
+      // p1 is waiting for opponent
+      this.setP2(new Player(name, getOppositeTeam(game.p1.team)))
+    } else {
+      game.spectators.push(new Spectator(name))
+    }
+
+    socket.join(game.room)
+    io.in(game.room).emit(EVENT.BOARD_UPDATE, game.getGameState())
+    cb({ success: true, game: game.getGameState() })
   })
 
-  socket.on('game:play', (payload, errCb) => {
+  socket.on(EVENT.PLAY_MOVE, (payload, errCb) => {
     const { room, team, posX, posY } = payload
     const game = games.find(g => g.room === room)
     const success = game.play(team, posX, posY)
     if (!success) return errCb({ status: 'ERROR', message: 'Move incorrect' })
-    io.in(game.room).emit('game:update', game.getGameState())
+    io.in(game.room).emit(EVENT.BOARD_UPDATE, game.getGameState())
   })
 
   socket.on('disconnect', () => {})
