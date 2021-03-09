@@ -2,7 +2,7 @@ import { createServer } from 'http'
 import { Server } from 'socket.io'
 import { GAME_MODE, TEAM, GAME_STATUS, EVENT } from '@tic-tac-toe/common'
 
-const getOppositeTeam = team => (team === TEAM.X ? TEAM.Y : TEAM.X)
+const getOppositeTeam = team => (team === TEAM.X ? TEAM.O : TEAM.X)
 
 class Game {
   constructor(mode, p1) {
@@ -13,7 +13,7 @@ class Game {
     this.p1 = p1
     this.p2 = null
     this.status = GAME_STATUS.WAITING_FOR_OPPONENT
-    if (mode === this.GAME_MODE.SINGLE_PLAYER) {
+    if (mode === GAME_MODE.SINGLE_PLAYER) {
       this.setP2(new Player('AI', getOppositeTeam(p1.team)))
       this.status = GAME_STATUS.PLAYER_1_TURN
     }
@@ -30,8 +30,8 @@ class Game {
   }
 
   getGameState() {
-    const { room, board, playerTurn, p1, p2, spectators } = this
-    return { room, board, playerTurn, p1, p2, spectators }
+    const { mode, room, board, playerTurn, p1, p2, status, spectators } = this
+    return { mode, room, board, playerTurn, p1, p2, status, spectators }
   }
 }
 
@@ -65,16 +65,20 @@ const io = new Server(httpServer, {
 })
 
 io.on('connection', socket => {
+  console.log(`connect socket ${socket.id}`)
+
+  socket.onAny((event, ...args) => {
+    console.log(event, args)
+  })
+
   socketOnEvents(socket, [EVENT.CREATE_SINGLE, EVENT.CREATE_ONLINE], (payload, cb) => {
     const { gameMode, p1Name, p1Team } = payload
     if (!gameMode || !p1Name || !p1Team) {
       return cb({ success: false, message: 'Payload incorrect' })
     }
-    if (![GAME_MODE.SINGLE_PLAYER, GAME_MODE.ONLINE].includes(gameMode)) {
-      return cb({ success: false, message: 'Incorrect game mode' })
-    }
+
     const p1 = new Player(p1Name, p1Team)
-    const newGame = new Game(p1, gameMode)
+    const newGame = new Game(gameMode, p1)
     games.push(newGame)
     socket.join(newGame.room)
     cb({ success: true, game: newGame.getGameState() })
@@ -90,7 +94,7 @@ io.on('connection', socket => {
     }
     const p1 = new Player(p1Name, p1Team)
     const p2 = new Player(p2Name, getOppositeTeam(p1Team))
-    const newGame = new Game(p1, gameMode)
+    const newGame = new Game(gameMode, p1)
     newGame.setP2(p2)
     games.push(newGame)
     socket.join(newGame.room)
@@ -128,7 +132,9 @@ io.on('connection', socket => {
     io.in(game.room).emit(EVENT.BOARD_UPDATE, game.getGameState())
   })
 
-  socket.on('disconnect', () => {})
+  socket.on('disconnect', () => {
+    console.log(`disconnect socket ${socket.id}`)
+  })
 })
 
 httpServer.listen(8080, () => {

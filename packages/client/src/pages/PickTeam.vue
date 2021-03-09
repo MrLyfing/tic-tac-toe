@@ -27,20 +27,40 @@
       </div>
     </div>
 
-    <btn class="btn-continue" size="small" :to="ROUTE.GAME.PATH">Continue</btn>
+    <btn class="btn-continue" size="small" @click="submit">Continue</btn>
   </div>
 </template>
 
 <script>
-import { TEAM, ROUTE } from '/@/constants'
-import { ref } from 'vue'
+import { TEAM, EVENT, GAME_MODE } from '@tic-tac-toe/common'
+import { ROUTE } from '/@/constants'
+import socket from '/@/socket.js'
+
 import Btn from '/@/components/Btn.vue'
 
 export default {
   components: { Btn },
-  setup() {
-    const selectedTeam = ref(TEAM.X)
-    return { selectedTeam, TEAM, ROUTE }
+  data: () => ({
+    TEAM,
+    ROUTE,
+    selectedTeam: TEAM.X
+  }),
+  methods: {
+    submit() {
+      const data = {
+        gameMode: GAME_MODE.SINGLE_PLAYER,
+        p1Name: 'Lyfing',
+        p1Team: this.selectedTeam
+      }
+      socket.emit(EVENT.CREATE_SINGLE, data, res => {
+        console.log(res)
+        if (res.success) {
+          this.$router.push({ path: ROUTE.GAME.PATH })
+        } else {
+          // error, do something
+        }
+      })
+    }
   }
 }
 </script>

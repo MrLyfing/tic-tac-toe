@@ -4,10 +4,7 @@ const GAME_MODE = {
   INVITE_FRIEND: 'invite_friend'
 }
 
-const TEAM = {
-  X: 'X',
-  Y: 'Y'
-}
+const TEAM = { X: 'x', O: 'y' }
 
 const GAME_STATUS = {
   WAITING_FOR_OPPONENT: 'waiting_for_opponent',
