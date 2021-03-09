@@ -18,7 +18,7 @@ class Game {
       this.status = GAME_STATUS.PLAYER_1_TURN
     }
     this.spectators = []
-    this._moves = 0
+    this._moveCount = 0
   }
 
   setP2(player) {
@@ -89,18 +89,20 @@ io.on('connection', socket => {
     cb({ status: 'OK', game: newGame.getGameState() })
   })
 
-  socket.on('game:joinOnline', (payload, errCb) => {
+  socket.on('game:joinOnline', (payload, cb) => {
     const { room, p2Name } = payload
     if (!room || !p2Name) {
-      return errCb({ status: 'ERROR', message: 'Payload incorrect' })
+      return cb({ status: 'ERROR', message: 'Payload incorrect' })
     }
     const game = games.find(g => g.room === room)
-    if (!game) return errCb({ status: 'ERROR', message: 'Game not found' })
-    if (game.mode !== GAME_MODE.ONLINE) return errCb({ status: 'ERROR', message: 'This is not an online game' })
+    if (!game) return cb({ status: 'ERROR', message: 'Game not found' })
+    if (game.mode !== GAME_MODE.ONLINE) return cb({ status: 'ERROR', message: 'This is not an online game' })
     // TODO: Join as spectator if game in progress...
     this.setP2(p2Name, getOppositeTeam(game.p1.team))
     socket.join(game.room)
+
     io.in(game.room).emit('game:update', game.getGameState())
+    cb({ status: 'OK', game: game.getGameState() })
   })
 
   socket.on('game:play', (payload, errCb) => {
