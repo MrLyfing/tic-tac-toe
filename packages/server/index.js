@@ -5,18 +5,14 @@ import { GAME_MODE, TEAM, GAME_STATUS, EVENT } from '@tic-tac-toe/common'
 const getOppositeTeam = team => (team === TEAM.X ? TEAM.O : TEAM.X)
 
 class Game {
-  constructor(mode, p1) {
+  constructor(mode, p1, p2 = null) {
     this.mode = mode
     this.room = Date.now()
     this.board = []
     this.playerTurn = p1
     this.p1 = p1
     this.p2 = null
-    this.status = GAME_STATUS.WAITING_FOR_OPPONENT
-    if (mode === GAME_MODE.SINGLE_PLAYER) {
-      this.setP2(new Player('AI', getOppositeTeam(p1.team)))
-      this.status = GAME_STATUS.PLAYER_1_TURN
-    }
+    this.status = mode === GAME_MODE.ONLINE ? GAME_STATUS.WAITING_FOR_OPPONENT : GAME_STATUS.PLAYER_1_TURN
     this.spectators = []
     this._moveCount = 0
   }
@@ -52,7 +48,7 @@ class Spectator extends User {}
 
 function socketOnEvents(socket, names, fn) {
   names.forEach(name => {
-    socket.on(name, fn)
+    socket.on(name, fn(name))
   })
 }
 
@@ -71,35 +67,38 @@ io.on('connection', socket => {
     console.log(event, args)
   })
 
-  socketOnEvents(socket, [EVENT.CREATE_SINGLE, EVENT.CREATE_ONLINE], (payload, cb) => {
-    const { gameMode, p1Name, p1Team } = payload
-    if (!gameMode || !p1Name || !p1Team) {
-      return cb({ success: false, message: 'Payload incorrect' })
-    }
+  socketOnEvents(
+    socket,
+    [EVENT.CREATE_SINGLE, EVENT.CREATE_ONLINE, EVENT.CREATE_MULTIPLAYER],
+    eventName => (payload, cb) => {
+      let newGame = null
+      if ([EVENT.CREATE_SINGLE, EVENT.CREATE_ONLINE].includes(eventName)) {
+        const { p1Name, p1Team } = payload
+        if (!p1Name || !p1Team) return cb({ success: false, message: 'Payload incorrect' })
 
-    const p1 = new Player(p1Name, p1Team)
-    const newGame = new Game(gameMode, p1)
-    games.push(newGame)
-    socket.join(newGame.room)
-    cb({ success: true, game: newGame.getGameState() })
-  })
-
-  socket.on(EVENT.CREATE_MULTIPLAYER, (payload, cb) => {
-    const { gameMode, p1Name, p1Team, p2Name } = payload
-    if (!gameMode || !p1Name || !p1Team || !p2Name) {
-      return cb({ success: false, message: 'Payload incorrect' })
+        const p1 = new Player(p1Name, p1Team)
+        if (eventName === EVENT.CREATE_SINGLE) {
+          const p2 = new Player('AI', getOppositeTeam(p1.team))
+          newGame = new Game(GAME_MODE.CREATE_SINGLE, p1, p2)
+        } else {
+          newGame = new Game(GAME_MODE.CREATE_ONLINE, p1)
+        }
+      } else {
+        // Create multiplayer
+        const { p1Name, p1Team, p2Name } = payload
+        if (!p1Name || !p1Team || !p2Name) {
+          return cb({ success: false, message: 'Payload incorrect' })
+        }
+        const p1 = new Player(p1Name, p1Team)
+        const p2 = new Player(p2Name, getOppositeTeam(p1Team))
+        newGame = new Game(GAME_MODE.MULTIPLAYER, p1)
+        newGame.setP2(p2)
+      }
+      games.push(newGame)
+      socket.join(newGame.room)
+      cb({ success: true, game: newGame.getGameState() })
     }
-    if (gameMode !== GAME_MODE.MULTIPLAYER) {
-      return cb({ success: false, message: 'Incorrect game mode' })
-    }
-    const p1 = new Player(p1Name, p1Team)
-    const p2 = new Player(p2Name, getOppositeTeam(p1Team))
-    const newGame = new Game(gameMode, p1)
-    newGame.setP2(p2)
-    games.push(newGame)
-    socket.join(newGame.room)
-    cb({ success: true, game: newGame.getGameState() })
-  })
+  )
 
   socket.on(EVENT.JOIN_ONLINE, (payload, cb) => {
     const { room, name } = payload
